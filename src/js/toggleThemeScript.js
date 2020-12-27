@@ -6,14 +6,13 @@ const Theme = {
 
 /* Находим необходимые элементы */
 const refs = {
-  body: document.querySelector('body'),
+  body: document.body,
   toggleBtn: document.querySelector('#theme-switch-toggle'),
   currentTheme: localStorage.getItem('theme'),
 };
 
 /* Берем тему из локального хранилища, и задаем её в виде класса на body */
 const savedTheme = localStorage.getItem('theme');
-refs.body.classList.add(savedTheme);
 
 /* Проверяем, открывается ли страница в первый раз 
 (если это так, то при начале исполнения файла, на body присваивается класс null,
@@ -28,12 +27,12 @@ refs.toggleBtn.addEventListener('input', toggleBtnHandler);
 
 /* Функция выполняемая при переключении кнопки: меняется тема и, тема, которая используется в данный момент, записывается в локальное хранилище */
 function toggleBtnHandler() {
-  refs.body.classList.toggle(Theme.LIGHT);
-  refs.body.classList.toggle(Theme.DARK);
   if (refs.body.classList.contains('dark-theme')) {
-    localStorage.setItem('theme', 'dark-theme');
-  } else {
+    refs.body.classList.replace(Theme.DARK, Theme.LIGHT);
     localStorage.setItem('theme', 'light-theme');
+  } else {
+    refs.body.classList.replace(Theme.LIGHT, Theme.DARK);
+    localStorage.setItem('theme', 'dark-theme');
   }
 }
 
@@ -46,8 +45,9 @@ function darkThemeCheck() {
 
 /* Функция для проверки открывается ли страница в первый раз на данном устройстве или нет */
 function primaryPageOpeningCheck() {
-  if (refs.body.classList.contains(null)) {
-    refs.body.classList.remove(null);
+  if (!savedTheme) {
     refs.body.classList.add(Theme.LIGHT);
+  } else {
+    refs.body.classList.add(savedTheme);
   }
 }
